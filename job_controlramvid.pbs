@@ -1,0 +1,38 @@
+#!/bin/bash
+#PBS -N ControlNet_RaMViD
+#PBS -l walltime=48:00:00
+#PBS -l select=1:ncpus=2:mem=64gb:ngpus=1:gpu_type=RTX6000
+#PBS -e /rds/general/user/xz3622/home/controlramvid_error.log
+#PBS -o /rds/general/user/xz3622/home/controlramvid_output.log
+
+module load cuda/11.4.2
+module load cudnn/8.2.4
+
+echo "Modules loaded..."
+
+source $HOME/.bashrc
+conda activate ram
+
+echo "Conda environment set..."
+
+cp -r $HOME/Projects/ControlRaMViD $TMPDIR
+cp -r $HOME/Projects/control_train $TMPDIR
+export OPENAI_LOGDIR="$HOME/Projects/ControlRaMViD/models"
+# export MASTER_ADDR="localhost"
+# echo $MASTER_ADDR
+
+cd $TMPDIR
+
+echo "Current working path:"
+echo $(pwd)
+
+echo "Files in the current folder:"
+echo $(ls)
+
+echo "Train the model..."
+
+python ./ControlRaMViD/RaMViD/scripts/control_train.py --data_dir ./control_train --image_size 64 --num_channels 128 --num_res_blocks 3 --scale_time_dim 0 --diffusion_steps 1000 --noise_schedule linear --lr 2e-5 --batch_size 2 --microbatch 1 --seq_len 11 --mask_range 8, --uncondition_rate 0.25 --save_interval 2000 --resume_checkpoint ./ControlRaMViD/models/control_model500000.pt
+
+echo "Traning finished..."
+
+echo "Finished"

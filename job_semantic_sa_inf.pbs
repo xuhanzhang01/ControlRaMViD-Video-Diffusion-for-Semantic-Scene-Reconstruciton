@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -N SSA_inference
+#PBS -l walltime=48:00:00
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1:gpu_type=RTX6000
+#PBS -e /rds/general/user/xz3622/home/ssa_error.log
+#PBS -o /rds/general/user/xz3622/home/ssa_output.log
+
+module load cuda/11.4.2
+module load cudnn/8.2.4
+
+source $HOME/.bashrc
+conda activate ssa
+
+echo "Conda environment set."
+
+export MASTER_ADDR="localhost"
+echo $MASTER_ADDR
+
+cp -r $HOME/Projects/SA $TMPDIR
+
+echo "TMPDIR:"
+echo $TMPDIR
+
+cd $TMPDIR/SA/Semantic-Segment-Anything-main
+
+echo "Current working path:"
+echo $(pwd)
+
+echo "Files in the current folder:"
+echo $(ls)
+
+python scripts/main_ssa.py --data_dir data/uavid_test/ --out_dir output_uavid_test --world_size 1 --save_img --ckpt_path models/sam_vit_h.pth --dataset cityscapes
+echo "Inference finished."
+
+cp -r $TMPDIR/SA/Semantic-Segment-Anything-main/output_uavid_test $HOME/Projects/SA/
+
+echo "Finished."

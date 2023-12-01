@@ -1,0 +1,45 @@
+#!/bin/bash
+#PBS -N SSA_sub_resize
+#PBS -l walltime=64:00:00
+#PBS -l select=1:ncpus=8:mem=128gb:ngpus=1:gpu_type=RTX6000
+#PBS -e /rds/general/user/xz3622/home/ssa_resize_error.log
+#PBS -o /rds/general/user/xz3622/home/ssa_resize_output.log
+
+module load cuda/11.4.2
+module load cudnn/8.2.4
+
+source $HOME/.bashrc
+conda activate ssa
+
+echo "Conda environment set."
+
+export MASTER_ADDR="localhost"
+echo $MASTER_ADDR
+
+cp -r $HOME/Projects/SA $TMPDIR
+
+echo "TMPDIR:"
+echo $TMPDIR
+
+cd $TMPDIR/SA/Semantic-Segment-Anything-main
+
+echo "Current working path:"
+echo $(pwd)
+
+echo "Files in the current folder:"
+echo $(ls)
+
+sub_folders=($(find ./data/city_and_uav_images_resize/train -mindepth 1 -type d))
+echo $sub_folders
+for sub_folder in "${sub_folders[@]}"
+do
+	echo "Sequence folder:"
+	echo $sub_folder
+	python scripts/main_ssa.py --data_dir $sub_folder --out_dir $sub_folder --world_size 1 --save_img --ckpt_path models/sam_vit_h.pth --dataset cityscapes
+done
+
+echo "Inference finished."
+
+cp -r $TMPDIR/SA/Semantic-Segment-Anything-main/data/city_and_uav_images_resize/train $HOME/Projects/SA/resize_train
+
+echo "Finished."
