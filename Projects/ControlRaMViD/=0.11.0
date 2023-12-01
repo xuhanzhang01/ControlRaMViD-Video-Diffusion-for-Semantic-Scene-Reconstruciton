@@ -1,0 +1,13 @@
+Collecting blobfile
+  Using cached blobfile-2.0.2-py3-none-any.whl (74 kB)
+Requirement already satisfied: filelock~=3.0 in /home/xc2322/anaconda3/envs/diffusion/lib/python3.8/site-packages (from blobfile) (3.12.0)
+Collecting urllib3<3,>=1.25.3
+  Using cached urllib3-2.0.2-py3-none-any.whl (123 kB)
+Collecting pycryptodomex~=3.8
+  Downloading pycryptodomex-3.18.0-cp35-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 45.7 MB/s eta 0:00:00
+Collecting lxml~=4.9
+  Downloading lxml-4.9.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl (7.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 73.4 MB/s eta 0:00:00
+Installing collected packages: urllib3, pycryptodomex, lxml, blobfile
+Successfully installed blobfile-2.0.2 lxml-4.9.2 pycryptodomex-3.18.0 urllib3-2.0.2
